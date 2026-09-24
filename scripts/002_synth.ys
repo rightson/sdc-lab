@@ -1,0 +1,9 @@
+read_verilog rtl/002_two_stage.v
+hierarchy -check -top two_stage
+proc
+opt
+memory
+opt
+dfflibmap -liberty lib/sdc_lab_min.lib
+clean
+write_verilog -noattr build/002_two_stage_yosys.v
