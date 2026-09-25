@@ -1,0 +1,8 @@
+read_verilog rtl/003_generated_clock.v
+hierarchy -check -top generated_clock_demo
+proc
+opt
+dfflibmap -liberty lib/sdc_lab_generated.lib
+abc -liberty lib/sdc_lab_generated.lib
+clean
+write_verilog -noattr build/003_generated_clock_yosys.v

@@ -33,6 +33,10 @@ The repository grows one experiment at a time. Each experiment starts from a tim
 
 [Experiment 002](experiments/002-clock-edge-relationships/README.md) moves from arithmetic to a real STA-shaped flow. A two-register design, synthetic Liberty model, SDC, and OpenSTA scripts expose why a same-clock 10 ns path uses a 10 ns setup relationship but a 0 ns hold relationship. The broken case targets a nonexistent clock port so the checker must reject it.
 
+### Day 3 — Generated Clock Lineage
+
+[Experiment 003](experiments/003-generated-clock-lineage/README.md) adds a divide-by-two clock derived from a 10 ns root clock. The good SDC uses `create_generated_clock` so the 20 ns clock retains its source relationship. The comparison case uses a second `create_clock` on the divider output: the period is numerically correct, but source/master lineage is absent.
+
 ## Quick verification
 
 Requires Python 3.10+:
@@ -40,6 +44,7 @@ Requires Python 3.10+:
 ```bash
 python3 -m unittest discover -s tests -v
 python3 checker/check_clock_constraint.py sdc/002_clock_good.sdc
+python3 checker/check_generated_clock.py sdc/003_generated_clock_good.sdc
 ```
 
 Expected failure case:
@@ -48,7 +53,7 @@ Expected failure case:
 python3 checker/check_clock_constraint.py sdc/002_clock_bad_target.sdc
 ```
 
-The second command should exit non-zero.
+The Day 2 bad-target command should exit non-zero. For Day 3, `python3 checker/check_generated_clock.py sdc/003_generated_clock_independent.sdc` must also exit non-zero because the divider output is modeled as a new primary clock.
 
 ## Open-source EDA flow
 
@@ -56,6 +61,7 @@ With OpenSTA installed:
 
 ```bash
 sta scripts/002_sta_good.tcl
+sta scripts/003_sta_good.tcl
 ```
 
 With Yosys installed, the Day 2 RTL can also be mapped to the synthetic DFF library:
